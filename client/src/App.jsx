@@ -166,10 +166,10 @@ export default function App() {
     setTimeout(() => setToast(null), 3000);
   };
 
-  const handleLogin = (role, name, email) => {
+  const handleLogin = (role, name, email, isSignup = false) => {
     setUser({ role, name, email });
     setPage(role === "admin" ? "admin" : "events");
-    showToast(`Welcome back, ${name}! 🎉`);
+    showToast(isSignup ? `Welcome, ${name}! 🎉` : `Welcome back, ${name}! 🎉`);
   };
   const handleLogout = () => {
     setUser(null);
@@ -311,7 +311,7 @@ function LandingPage({ onLogin, onSignup }) {
 
         {/* Main Heading */}
         <h1 style={{
-          fontFamily:"'Syne', sans-serif", fontSize:"clamp(52px,9vw,108px)", fontWeight:800, lineHeight:0.95, letterSpacing:"-4px", marginBottom:28,
+          fontFamily:"'Syne', sans-serif", fontSize:"clamp(34px,5.5vw,68px)", fontWeight:800, lineHeight:0.95, letterSpacing:"-3px", marginBottom:28,
           backgroundImage:"linear-gradient(135deg, #fff 0%, #FF6B35 30%, #FF3CAC 60%, #8B5CF6 85%, #00D4AA 100%)",
           backgroundClip:"text", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent",
           backgroundSize:"300% 300%", animation:"gradShift 5s ease infinite, fadeUp 0.7s ease both"
@@ -321,7 +321,7 @@ function LandingPage({ onLogin, onSignup }) {
           <em style={{ fontStyle:"italic" }}>Alive.</em>
         </h1>
 
-        <p style={{ fontSize:"clamp(15px,2vw,20px)", color:"#6B7280", maxWidth:580, margin:"0 auto 44px", lineHeight:1.75, animation:"fadeUp 0.8s ease 0.1s both" }}>
+        <p style={{ fontSize:"clamp(14px,1.5vw,16px)", color:"#6B7280", maxWidth:580, margin:"0 auto 44px", lineHeight:1.75, animation:"fadeUp 0.8s ease 0.1s both" }}>
           Register for events, get instant QR tickets, and track attendance — all on one blazing-fast platform built for college life.
         </p>
 
@@ -347,7 +347,7 @@ function LandingPage({ onLogin, onSignup }) {
         <div style={{ display:"flex", justifyContent:"center", gap:"clamp(24px,6vw,100px)", flexWrap:"wrap", marginBottom:80, animation:"fadeUp 0.9s ease 0.3s both" }}>
           {[["30+","Live Events","🎪"],["5,000+","Students","👥"],["₹0","No Hidden Fees","✅"],["100%","QR Verified","🎟️"]].map(([v,l,icon])=>(
             <div key={l} style={{ textAlign:"center" }}>
-              <div style={{ fontFamily:"'Syne', sans-serif", fontSize:"clamp(30px,4vw,52px)", fontWeight:800,
+              <div style={{ fontFamily:"'Syne', sans-serif", fontSize:"clamp(22px,3vw,38px)", fontWeight:800,
                 backgroundImage:"linear-gradient(135deg,#FF6B35,#FF3CAC)", backgroundClip:"text", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>{v}</div>
               <div style={{ fontSize:13, color:"#4B5563", marginTop:4 }}>{icon} {l}</div>
             </div>
@@ -411,7 +411,7 @@ function LandingPage({ onLogin, onSignup }) {
         <div style={{ width:"100%", marginTop:80, padding:"48px 24px",
           background:"linear-gradient(135deg, rgba(255,107,53,0.1), rgba(255,60,172,0.1), rgba(139,92,246,0.1))",
           borderTop:"1px solid rgba(255,255,255,0.06)", borderBottom:"1px solid rgba(255,255,255,0.06)" }}>
-          <h2 style={{ fontFamily:"'Syne', sans-serif", fontSize:"clamp(28px,4vw,48px)", fontWeight:800, marginBottom:12,
+          <h2 style={{ fontFamily:"'Syne', sans-serif", fontSize:"clamp(22px,3vw,36px)", fontWeight:800, marginBottom:12,
             backgroundImage:"linear-gradient(90deg,#FF6B35,#FF3CAC)", backgroundClip:"text", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>
             Ready to join the fun?
           </h2>
@@ -453,10 +453,10 @@ function AuthPage({ mode, setMode, onLogin, onBack }) {
     setTimeout(() => {
       setLoading(false);
       if (role === "admin") {
-        if (email === ADMIN.email && password === ADMIN.password) onLogin("admin","Admin","admin@eventhive.com");
+        if (email === ADMIN.email && password === ADMIN.password) onLogin("admin","Admin","admin@eventhive.com", false);
         else { setErr("Invalid admin credentials."); }
       } else {
-        onLogin("user", mode==="signup" ? name : email.split("@")[0], email);
+        onLogin("user", mode==="signup" ? name : email.split("@")[0], email, mode==="signup");
       }
     }, 900);
   };
@@ -492,7 +492,7 @@ function AuthPage({ mode, setMode, onLogin, onBack }) {
           backgroundImage:`linear-gradient(90deg,${accent},#8B5CF6)`, WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", marginBottom:10 }}>
           ⬡ EventHive
         </div>
-        <h2 style={{ fontFamily:"'Syne', sans-serif", fontSize:"clamp(28px,4vw,42px)", fontWeight:800, marginBottom:8, color:"#fff", lineHeight:1.1 }}>
+        <h2 style={{ fontFamily:"'Syne', sans-serif", fontSize:"clamp(20px,3vw,34px)", fontWeight:800, marginBottom:8, color:"#fff", lineHeight:1.1 }}>
           {mode==="login" ? "Welcome back 👋" : "Join the party 🎉"}
         </h2>
         <p style={{ color:"#4B5563", marginBottom:36, fontSize:15 }}>
@@ -542,16 +542,18 @@ function AuthPage({ mode, setMode, onLogin, onBack }) {
                 <span style={{ width:16, height:16, border:"2px solid rgba(255,255,255,0.4)", borderTopColor:"#fff", borderRadius:"50%", display:"inline-block", animation:"spin 0.7s linear infinite" }} />
                 Signing in...
               </>
-            ) : mode==="login" ? "Login →" : "Create Account →"}
+            ) : role==="admin" ? "Admin Login →" : mode==="login" ? "Login →" : "Create Account →"}
           </button>
         </div>
 
+        {role !== "admin" && (
         <p style={{ textAlign:"center", marginTop:24, color:"#4B5563", fontSize:14 }}>
           {mode==="login" ? "No account? " : "Already a member? "}
           <span style={{ color:accent, cursor:"pointer", fontWeight:700 }} onClick={()=>{ setMode(mode==="login"?"signup":"login"); setErr(""); }}>
             {mode==="login" ? "Sign up free" : "Login"}
           </span>
         </p>
+        )}
       </div>
 
       {/* ── RIGHT PANEL — Visual showcase ── */}
@@ -561,7 +563,7 @@ function AuthPage({ mode, setMode, onLogin, onBack }) {
         {/* Decorative event cards stack */}
         <div style={{ position:"relative", zIndex:2, padding:48, width:"100%", maxWidth:420 }}>
           <div style={{ textAlign:"center", marginBottom:36 }}>
-            <div style={{ fontSize:64, marginBottom:12, animation:`float 4s ease-in-out infinite` }}>{mode==="login"?"🎟️":"🎉"}</div>
+            <div style={{ fontSize:48, marginBottom:12, animation:`float 4s ease-in-out infinite` }}>{mode==="login"?"🎟️":"🎉"}</div>
             <h3 style={{ fontFamily:"'Syne', sans-serif", fontSize:24, fontWeight:800, color:"#fff", marginBottom:8 }}>
               {mode==="login" ? "Your Events Await" : "Join 5,000+ Students"}
             </h3>
@@ -699,7 +701,7 @@ function EventsPage({ events, onSelect }) {
     <div style={{ maxWidth:1320, margin:"0 auto", padding:"36px 24px" }}>
       {/* Header */}
       <div style={{ marginBottom:32, animation:"fadeUp 0.5s ease" }}>
-        <h1 style={{ fontFamily:"'Syne', sans-serif", fontSize:"clamp(32px,5vw,52px)", fontWeight:800, color:"#fff", marginBottom:8 }}>
+        <h1 style={{ fontFamily:"'Syne', sans-serif", fontSize:"clamp(24px,4vw,40px)", fontWeight:800, color:"#fff", marginBottom:8 }}>
           Discover Events{" "}
           <span style={{ backgroundImage:"linear-gradient(90deg,#FF6B35,#FF3CAC)", backgroundClip:"text", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>🔥</span>
         </h1>
@@ -763,7 +765,7 @@ function EventsPage({ events, onSelect }) {
 
       {filtered.length === 0 ? (
         <div style={{ textAlign:"center", padding:"100px 0", color:"#2D2D35" }}>
-          <div style={{ fontSize:64, marginBottom:16 }}>🔍</div>
+          <div style={{ fontSize:48, marginBottom:16 }}>🔍</div>
           <p style={{ fontSize:18 }}>No events found. Try different filters.</p>
         </div>
       ) : (
@@ -891,7 +893,7 @@ function EventDetail({ event:e, onBack, onRegister, myTickets, user }) {
         )}
         <div style={{ position:"absolute", bottom:24, left:28 }}>
           <div style={{ background:e.accent, color:"#fff", fontSize:12, fontWeight:700, padding:"5px 12px", borderRadius:20, marginBottom:10, display:"inline-block" }}>{e.category}</div>
-          <h1 style={{ fontFamily:"'Syne', sans-serif", fontSize:"clamp(24px,4vw,44px)", fontWeight:800, color:"#fff", lineHeight:1.1 }}>{e.title}</h1>
+          <h1 style={{ fontFamily:"'Syne', sans-serif", fontSize:"clamp(20px,3vw,34px)", fontWeight:800, color:"#fff", lineHeight:1.1 }}>{e.title}</h1>
         </div>
         {dur>1 && (
           <div style={{ position:"absolute", top:20, right:20, background:"rgba(0,0,0,0.75)", color:"#fff", fontSize:12, fontWeight:600, padding:"6px 14px", borderRadius:20 }}>
@@ -1079,7 +1081,7 @@ function AdminDashboard({ events, tickets }) {
     <div style={{ maxWidth:1320, margin:"0 auto", padding:"32px 24px" }}>
       <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", marginBottom:32, flexWrap:"wrap", gap:16 }}>
         <div>
-          <h1 style={{ fontFamily:"'Syne', sans-serif", fontSize:"clamp(28px,4vw,44px)", fontWeight:800, color:"#fff", marginBottom:4 }}>Admin Dashboard 👑</h1>
+          <h1 style={{ fontFamily:"'Syne', sans-serif", fontSize:"clamp(22px,3vw,36px)", fontWeight:800, color:"#fff", marginBottom:4 }}>Admin Dashboard 👑</h1>
           <p style={{ color:"#4B5563", fontSize:15 }}>Full overview — events, registrations, and revenue.</p>
         </div>
         <button className="btn-press" onClick={exportCSV} style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.12)", color:"#9CA3AF", padding:"10px 22px", borderRadius:12, fontSize:14, fontWeight:600, display:"flex", alignItems:"center", gap:8 }}>
