@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import api from "./api";
 
 /* ─── FONTS ─── */
 const FontLink = () => (
@@ -12,7 +11,7 @@ const FontLink = () => (
 /* ─── 30 EVENTS ─── */
 const EVENTS_DATA = [
   { id:1,  title:"Technovate Summit",        category:"Tech",      startDate:"2025-06-07", endDate:"2025-06-09", time:"10:00 AM", venue:"Main Auditorium",      price:299,  capacity:200,  registered:178, tags:["Hackathon","AI","3 Days"],     image:"img_technovate",     description:"The biggest college tech summit. AI workshops, hackathon, and 50+ speakers over 3 epic days.", accent:"#FF6B35" },
-  { id:2,  title:"Utsav Cultural Fest",       category:"Cultural",  startDate:"2025-06-14", endDate:"2025-06-15", time:"5:00 PM",  venue:"Open Air Theatre",     price:149,  capacity:500,  registered:312, tags:["Music","Dance","2 Days"],      image:"img_cultural",       description:"Music, dance, art, and food from across India. A two-day celebration of culture and creativity.", accent:"#6366F1" },
+  { id:2,  title:"Utsav Cultural Fest",       category:"Cultural",  startDate:"2025-06-14", endDate:"2025-06-15", time:"5:00 PM",  venue:"Open Air Theatre",     price:149,  capacity:500,  registered:312, tags:["Music","Dance","2 Days"],      image:"img_cultural",       description:"Music, dance, art, and food from across India. A two-day celebration of culture and creativity.", accent:"#FF3CAC" },
   { id:3,  title:"Startup Pitch Night",       category:"Business",  startDate:"2025-06-20", endDate:"2025-06-20", time:"6:00 PM",  venue:"Seminar Hall B",       price:0,    capacity:100,  registered:67,  tags:["Startups","Pitch","Free"],     image:"img_startup",        description:"Present your startup idea to investors and industry mentors. Get funded or get feedback.", accent:"#00D4AA" },
   { id:4,  title:"Photography Workshop",      category:"Workshop",  startDate:"2025-06-25", endDate:"2025-06-25", time:"11:00 AM", venue:"Arts Block",           price:499,  capacity:40,   registered:38,  tags:["Photography","Hands-on"],      image:"img_photography",    description:"Hands-on photography and editing masterclass with professional photographers. Limited seats!", accent:"#FFBE0B" },
   { id:5,  title:"E-Sports Championship",     category:"Gaming",    startDate:"2025-06-28", endDate:"2025-06-29", time:"12:00 PM", venue:"Computer Lab Complex", price:199,  capacity:64,   registered:48,  tags:["Gaming","BGMI","2 Days"],      image:"img_esports",        description:"Compete in BGMI, Valorant, and FIFA. Cash prizes worth ₹50,000 for winners.", accent:"#8B5CF6" },
@@ -110,7 +109,7 @@ const GlobalStyle = () => (
     body { background: #050508; overflow-x: hidden; }
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: #050508; }
-    ::-webkit-scrollbar-thumb { background: linear-gradient(#FF6B35, #6366F1); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(#FF6B35, #FF3CAC); border-radius: 3px; }
 
     @keyframes fadeUp    { from { opacity:0; transform:translateY(40px); } to { opacity:1; transform:translateY(0); } }
     @keyframes fadeIn    { from { opacity:0; } to { opacity:1; } }
@@ -118,7 +117,7 @@ const GlobalStyle = () => (
     @keyframes floatR    { 0%,100% { transform:translateY(0) rotate(0deg); } 50% { transform:translateY(-15px) rotate(-3deg); } }
     @keyframes pulse     { 0%,100% { opacity:0.5; transform:scale(1); } 50% { opacity:1; transform:scale(1.15); } }
     @keyframes gradShift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
-    @keyframes glow      { 0%,100%{box-shadow:0 0 24px rgba(255,107,53,0.4)} 50%{box-shadow:0 0 50px rgba(99,102,241,0.6)} }
+    @keyframes glow      { 0%,100%{box-shadow:0 0 24px rgba(255,107,53,0.4)} 50%{box-shadow:0 0 50px rgba(255,60,172,0.6)} }
     @keyframes orbPulse  { 0%,100%{transform:scale(1);opacity:0.12} 50%{transform:scale(1.15);opacity:0.2} }
     @keyframes borderFlow{ 0%{background-position:0% 50%}100%{background-position:200% 50%} }
     @keyframes scanline  { 0%{top:-20%} 100%{top:120%} }
@@ -130,14 +129,14 @@ const GlobalStyle = () => (
     .card-hover { transition: transform 0.3s cubic-bezier(.34,1.56,.64,1), box-shadow 0.3s ease; }
     .card-hover:hover { transform: translateY(-8px) scale(1.01); box-shadow: 0 32px 80px rgba(0,0,0,0.6) !important; }
     .btn-press { transition: all 0.18s cubic-bezier(.34,1.56,.64,1); cursor: pointer; }
-    .btn-press:hover { transform: scale(1.05); }
+    .btn-press:hover { transform: scale(1.06); filter: brightness(1.15); }
     .btn-press:active { transform: scale(0.97); }
     input, select, textarea { outline: none; }
     input::placeholder { color: #444; }
     select option { background: #111; color: #fff; }
 
     .nav-link { transition: all 0.2s; position: relative; }
-    .nav-link::after { content:''; position:absolute; bottom:-2px; left:50%; right:50%; height:2px; background:linear-gradient(90deg,#FF6B35,#6366F1); border-radius:2px; transition: all 0.3s; }
+    .nav-link::after { content:''; position:absolute; bottom:-2px; left:50%; right:50%; height:2px; background:linear-gradient(90deg,#FF6B35,#FF3CAC); border-radius:2px; transition: all 0.3s; }
     .nav-link.active::after { left:0; right:0; }
 
     .ticket-card { transition: all 0.3s ease; }
@@ -149,18 +148,6 @@ const GlobalStyle = () => (
     .noise::before { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events:none; z-index:1; opacity:0.4; }
   `}</style>
 );
-
-/* ─── Razorpay script loader ─── */
-function loadRazorpay() {
-  return new Promise((resolve) => {
-    if (window.Razorpay) { resolve(true); return; }
-    const s = document.createElement("script");
-    s.src = "https://checkout.razorpay.com/v1/checkout.js";
-    s.onload = () => resolve(true);
-    s.onerror = () => resolve(false);
-    document.head.appendChild(s);
-  });
-}
 
 /* ─────────────────────────────────────────────────────────
    APP ROOT
@@ -209,7 +196,7 @@ export default function App() {
       {toast && (
         <div style={{
           position:"fixed", top:20, right:20, zIndex:9999,
-          background: toast.type==="success" ? "linear-gradient(135deg,#FF6B35,#6366F1)" : "rgba(59,130,246,0.9)",
+          background: toast.type==="success" ? "linear-gradient(135deg,#FF6B35,#FF3CAC)" : "rgba(59,130,246,0.9)",
           color:"#fff", padding:"14px 22px", borderRadius:16, fontSize:14, fontWeight:600,
           boxShadow:"0 20px 60px rgba(0,0,0,0.5)", backdropFilter:"blur(10px)",
           animation:"slideInRight 0.3s ease", maxWidth:320,
@@ -238,7 +225,7 @@ export default function App() {
               <EventsPage events={EVENTS_DATA} onSelect={e => { setSelectedEvent(e); setPage("detail"); }} />
             )}
             {page === "detail" && selectedEvent && (
-              <EventDetail event={selectedEvent} onBack={() => setPage("events")} onRegister={handleRegister} myTickets={myTickets} user={user} showToast={showToast} />
+              <EventDetail event={selectedEvent} onBack={() => setPage("events")} onRegister={handleRegister} myTickets={myTickets} user={user} />
             )}
             {page === "tickets" && user.role === "user" && (
               <MyTickets tickets={myTickets} setPage={setPage} onOpen={setTicketModal} />
@@ -279,7 +266,7 @@ function LandingPage({ onLogin, onSignup }) {
         position:"fixed", inset:0, zIndex:0, pointerEvents:"none",
         background:`radial-gradient(ellipse 70% 60% at ${mousePos.x}% ${mousePos.y}%, rgba(255,107,53,0.12) 0%, transparent 60%),
                     radial-gradient(ellipse at 85% 10%, rgba(139,92,246,0.15) 0%, transparent 40%),
-                    radial-gradient(ellipse at 5% 90%, rgba(99,102,241,0.1) 0%, transparent 40%),
+                    radial-gradient(ellipse at 5% 90%, rgba(255,60,172,0.1) 0%, transparent 40%),
                     #050508`,
         transition:"background 0.3s ease"
       }} />
@@ -292,7 +279,7 @@ function LandingPage({ onLogin, onSignup }) {
       {/* Floating orbs */}
       {[
         ["#FF6B35", "8%",  "15%", "280px", 5],
-        ["#6366F1", "78%", "8%",  "200px", 6],
+        ["#FF3CAC", "78%", "8%",  "200px", 6],
         ["#8B5CF6", "5%",  "65%", "240px", 7],
         ["#00D4AA", "82%", "60%", "180px", 4],
         ["#FBBF24", "45%", "80%", "150px", 8],
@@ -304,12 +291,12 @@ function LandingPage({ onLogin, onSignup }) {
       <nav style={{ position:"fixed", top:0, left:0, right:0, zIndex:100, padding:"0 48px", height:72, display:"flex", alignItems:"center", justifyContent:"space-between",
         background:"rgba(5,5,8,0.7)", backdropFilter:"blur(24px)", borderBottom:"1px solid rgba(255,255,255,0.05)" }}>
         <div style={{ fontFamily:"'Syne', sans-serif", fontSize:26, fontWeight:800,
-          background:"linear-gradient(90deg,#FF6B35,#6366F1,#8B5CF6)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>
+          background:"linear-gradient(90deg,#FF6B35,#FF3CAC,#8B5CF6)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>
           ⬡ EventHive
         </div>
         <div style={{ display:"flex", gap:12 }}>
           <button className="btn-press" onClick={onLogin} style={{ background:"transparent", border:"1px solid rgba(255,255,255,0.15)", color:"#fff", padding:"10px 26px", borderRadius:50, fontSize:14, fontWeight:600 }}>Login</button>
-          <button className="btn-press" onClick={onSignup} style={{ background:"linear-gradient(135deg,#FF6B35,#6366F1)", border:"none", color:"#fff", padding:"10px 26px", borderRadius:50, fontSize:14, fontWeight:700, boxShadow:"0 8px 24px rgba(255,107,53,0.35)" }}>Sign Up Free</button>
+          <button className="btn-press" onClick={onSignup} style={{ background:"linear-gradient(135deg,#FF6B35,#FF3CAC)", border:"none", color:"#fff", padding:"10px 26px", borderRadius:50, fontSize:14, fontWeight:700, boxShadow:"0 8px 24px rgba(255,107,53,0.35)" }}>Sign Up Free</button>
         </div>
       </nav>
 
@@ -325,7 +312,7 @@ function LandingPage({ onLogin, onSignup }) {
         {/* Main Heading */}
         <h1 style={{
           fontFamily:"'Syne', sans-serif", fontSize:"clamp(52px,9vw,108px)", fontWeight:800, lineHeight:0.95, letterSpacing:"-4px", marginBottom:28,
-          backgroundImage:"linear-gradient(135deg, #fff 0%, #FF6B35 30%, #6366F1 60%, #8B5CF6 85%, #00D4AA 100%)",
+          backgroundImage:"linear-gradient(135deg, #fff 0%, #FF6B35 30%, #FF3CAC 60%, #8B5CF6 85%, #00D4AA 100%)",
           backgroundClip:"text", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent",
           backgroundSize:"300% 300%", animation:"gradShift 5s ease infinite, fadeUp 0.7s ease both"
         }}>
@@ -341,7 +328,7 @@ function LandingPage({ onLogin, onSignup }) {
         {/* CTA Buttons */}
         <div style={{ display:"flex", gap:16, justifyContent:"center", flexWrap:"wrap", marginBottom:72, animation:"fadeUp 0.8s ease 0.2s both" }}>
           <button className="btn-press" onClick={onSignup} style={{
-            background:"linear-gradient(135deg,#FF6B35,#6366F1)", border:"none", color:"#fff",
+            background:"linear-gradient(135deg,#FF6B35,#FF3CAC)", border:"none", color:"#fff",
             padding:"18px 44px", borderRadius:50, fontSize:16, fontWeight:800,
             boxShadow:"0 16px 40px rgba(255,107,53,0.4)", animation:"glow 2.5s ease-in-out infinite"
           }}>
@@ -349,7 +336,8 @@ function LandingPage({ onLogin, onSignup }) {
           </button>
           <button className="btn-press" onClick={onLogin} style={{
             background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.15)", color:"#fff",
-            padding:"18px 44px", borderRadius:50, fontSize:16, fontWeight:600
+            padding:"18px 44px", borderRadius:50, fontSize:16, fontWeight:600,
+            backdropFilter:"blur(10px)"
           }}>
             Login to Continue
           </button>
@@ -360,7 +348,7 @@ function LandingPage({ onLogin, onSignup }) {
           {[["30+","Live Events","🎪"],["5,000+","Students","👥"],["₹0","No Hidden Fees","✅"],["100%","QR Verified","🎟️"]].map(([v,l,icon])=>(
             <div key={l} style={{ textAlign:"center" }}>
               <div style={{ fontFamily:"'Syne', sans-serif", fontSize:"clamp(30px,4vw,52px)", fontWeight:800,
-                backgroundImage:"linear-gradient(135deg,#FF6B35,#6366F1)", backgroundClip:"text", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>{v}</div>
+                backgroundImage:"linear-gradient(135deg,#FF6B35,#FF3CAC)", backgroundClip:"text", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>{v}</div>
               <div style={{ fontSize:13, color:"#4B5563", marginTop:4 }}>{icon} {l}</div>
             </div>
           ))}
@@ -402,7 +390,7 @@ function LandingPage({ onLogin, onSignup }) {
         <div style={{ width:"100%", maxWidth:1100, display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(220px,1fr))", gap:16, animation:"fadeUp 1s ease 0.6s both", padding:"0 20px" }}>
           {[
             { icon:"🎟️", title:"Instant QR Tickets", desc:"Register and get a unique QR ticket in seconds.", color:"#FF6B35" },
-            { icon:"📊", title:"Live Seat Tracker", desc:"Real-time capacity bars so you never miss out.", color:"#6366F1" },
+            { icon:"📊", title:"Live Seat Tracker", desc:"Real-time capacity bars so you never miss out.", color:"#FF3CAC" },
             { icon:"💳", title:"Razorpay Payments", desc:"Secure test-mode payments, UPI, cards, wallets.", color:"#8B5CF6" },
             { icon:"📱", title:"Mobile First", desc:"Designed to work beautifully on every screen.", color:"#00D4AA" },
           ].map((f,i)=>(
@@ -421,15 +409,15 @@ function LandingPage({ onLogin, onSignup }) {
 
         {/* Bottom CTA band */}
         <div style={{ width:"100%", marginTop:80, padding:"48px 24px",
-          background:"linear-gradient(135deg, rgba(255,107,53,0.1), rgba(99,102,241,0.1), rgba(139,92,246,0.1))",
+          background:"linear-gradient(135deg, rgba(255,107,53,0.1), rgba(255,60,172,0.1), rgba(139,92,246,0.1))",
           borderTop:"1px solid rgba(255,255,255,0.06)", borderBottom:"1px solid rgba(255,255,255,0.06)" }}>
           <h2 style={{ fontFamily:"'Syne', sans-serif", fontSize:"clamp(28px,4vw,48px)", fontWeight:800, marginBottom:12,
-            backgroundImage:"linear-gradient(90deg,#FF6B35,#6366F1)", backgroundClip:"text", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>
+            backgroundImage:"linear-gradient(90deg,#FF6B35,#FF3CAC)", backgroundClip:"text", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>
             Ready to join the fun?
           </h2>
           <p style={{ color:"#6B7280", marginBottom:28, fontSize:16 }}>30+ events this summer. Tech, culture, sports, music, and more.</p>
           <button className="btn-press" onClick={onSignup} style={{
-            background:"linear-gradient(135deg,#FF6B35,#6366F1)", border:"none", color:"#fff",
+            background:"linear-gradient(135deg,#FF6B35,#FF3CAC)", border:"none", color:"#fff",
             padding:"16px 44px", borderRadius:50, fontSize:16, fontWeight:800,
             boxShadow:"0 12px 32px rgba(255,107,53,0.4)"
           }}>Get Started Free →</button>
@@ -456,7 +444,7 @@ function AuthPage({ mode, setMode, onLogin, onBack }) {
   const [loading, setLoading] = useState(false);
 
   const ADMIN = { email:"admin@eventhive.com", password:"admin123" };
-  const accent = mode === "signup" ? "#6366F1" : "#FF6B35";
+  const accent = mode === "signup" ? "#FF3CAC" : "#FF6B35";
 
   const handleSubmit = () => {
     if (!email || !password) { setErr("Please fill all fields."); return; }
@@ -641,7 +629,7 @@ function Navbar({ user, page, setPage, onLogout, myTickets }) {
       transition:"all 0.3s"
     }}>
       <div style={{ fontFamily:"'Syne', sans-serif", fontSize:22, fontWeight:800, cursor:"pointer",
-        backgroundImage:"linear-gradient(90deg,#FF6B35,#6366F1)", backgroundClip:"text", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}
+        backgroundImage:"linear-gradient(90deg,#FF6B35,#FF3CAC)", backgroundClip:"text", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}
         onClick={()=>setPage("events")}>
         ⬡ EventHive
       </div>
@@ -661,7 +649,7 @@ function Navbar({ user, page, setPage, onLogout, myTickets }) {
 
       <div style={{ display:"flex", alignItems:"center", gap:14 }}>
         <div style={{ display:"flex", alignItems:"center", gap:10 }}>
-          <div style={{ width:34, height:34, borderRadius:"50%", background:"linear-gradient(135deg,#FF6B35,#6366F1)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:14, fontWeight:800, color:"#fff" }}>
+          <div style={{ width:34, height:34, borderRadius:"50%", background:"linear-gradient(135deg,#FF6B35,#FF3CAC)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:14, fontWeight:800, color:"#fff" }}>
             {user.name[0].toUpperCase()}
           </div>
           <div>
@@ -713,7 +701,7 @@ function EventsPage({ events, onSelect }) {
       <div style={{ marginBottom:32, animation:"fadeUp 0.5s ease" }}>
         <h1 style={{ fontFamily:"'Syne', sans-serif", fontSize:"clamp(32px,5vw,52px)", fontWeight:800, color:"#fff", marginBottom:8 }}>
           Discover Events{" "}
-          <span style={{ backgroundImage:"linear-gradient(90deg,#FF6B35,#6366F1)", backgroundClip:"text", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>🔥</span>
+          <span style={{ backgroundImage:"linear-gradient(90deg,#FF6B35,#FF3CAC)", backgroundClip:"text", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>🔥</span>
         </h1>
         <div style={{ display:"flex", gap:16, alignItems:"center", flexWrap:"wrap" }}>
           <p style={{ color:"#4B5563", fontSize:16 }}>June · July · August 2025</p>
@@ -762,7 +750,7 @@ function EventsPage({ events, onSelect }) {
       <div style={{ display:"flex", gap:8, marginBottom:32, overflowX:"auto", paddingBottom:4, flexWrap:"wrap" }}>
         {CATEGORIES.map(c=>(
           <button key={c} onClick={()=>setCat(c)} className="btn-press" style={{
-            background: cat===c ? "linear-gradient(135deg,#FF6B35,#6366F1)" : "rgba(255,255,255,0.04)",
+            background: cat===c ? "linear-gradient(135deg,#FF6B35,#FF3CAC)" : "rgba(255,255,255,0.04)",
             border:`1px solid ${cat===c?"transparent":"rgba(255,255,255,0.08)"}`,
             color: cat===c ? "#fff" : "#6B7280",
             padding:"8px 20px", borderRadius:50, fontSize:13, fontWeight:600, whiteSpace:"nowrap", transition:"all 0.2s"
@@ -870,7 +858,7 @@ function EventCard({ event:e, idx, onClick }) {
 /* ─────────────────────────────────────────────────────────
    EVENT DETAIL
 ───────────────────────────────────────────────────────── */
-function EventDetail({ event:e, onBack, onRegister, myTickets, user, showToast }) {
+function EventDetail({ event:e, onBack, onRegister, myTickets, user }) {
   const alreadyRegistered = myTickets.some(t => t.event.id === e.id);
   const status = getStatus(e);
   const pct = slotsPct(e);
@@ -879,62 +867,10 @@ function EventDetail({ event:e, onBack, onRegister, myTickets, user, showToast }
   const cd = getCountdown(e.startDate);
   const [paying, setPaying] = useState(false);
 
-  const handleRegister = async () => {
+  const handleRegister = () => {
     if (alreadyRegistered || slots <= 0) return;
-
-    // Free event — call API then issue local ticket
-    if (e.price === 0) {
-      setPaying(true);
-      try { await api.payment.freeRegister(String(e.id)); } catch (_) {}
-      setPaying(false);
-      onRegister(e);
-      return;
-    }
-
-    // Paid event — Razorpay checkout
     setPaying(true);
-    const ready = await loadRazorpay();
-    if (!ready) {
-      setPaying(false);
-      showToast && showToast("Payment gateway unavailable — try refreshing.", "error");
-      return;
-    }
-    try {
-      const orderData = await api.payment.createOrder(String(e.id));
-      const options = {
-        key: orderData.keyId,
-        amount: orderData.amount,
-        currency: orderData.currency || "INR",
-        name: "EventHive",
-        description: e.title,
-        order_id: orderData.orderId,
-        handler: async (response) => {
-          try {
-            await api.payment.verify({
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature,
-              eventId: String(e.id),
-            });
-            onRegister(e);
-          } catch (err) {
-            showToast && showToast("Payment verification failed. Contact support.", "error");
-          } finally { setPaying(false); }
-        },
-        modal: { ondismiss: () => setPaying(false), confirm_close: true },
-        prefill: { name: user.name, email: user.email },
-        theme: { color: e.accent || "#FF6B35" },
-      };
-      const rzp = new window.Razorpay(options);
-      rzp.on("payment.failed", (r) => {
-        setPaying(false);
-        showToast && showToast(`Payment failed: ${r.error.description}`, "error");
-      });
-      rzp.open();
-    } catch (err) {
-      setPaying(false);
-      showToast && showToast(err.message || "Could not start payment. Is the backend running?", "error");
-    }
+    setTimeout(() => { setPaying(false); onRegister(e); }, 1400);
   };
 
   return (
@@ -994,8 +930,7 @@ function EventDetail({ event:e, onBack, onRegister, myTickets, user, showToast }
           </div>
         </div>
 
-        {/* Registration Card — hidden for admin */}
-        {user.role !== "admin" ? (
+        {/* Registration Card */}
         <div style={{ width:280, flexShrink:0, background:"rgba(255,255,255,0.03)", border:`1px solid ${e.accent}30`, borderRadius:24, padding:24, position:"sticky", top:96 }}>
           <div style={{ textAlign:"center", marginBottom:20 }}>
             <div style={{ fontFamily:"'Syne', sans-serif", fontSize:36, fontWeight:900, color:e.price===0?"#34D399":"#FBBF24" }}>
@@ -1038,7 +973,9 @@ function EventDetail({ event:e, onBack, onRegister, myTickets, user, showToast }
             ) : alreadyRegistered ? "✓ Already Registered" : slots<=0 ? "Sold Out" : e.price===0?"Register Free →":"Pay & Register →"}
           </button>
 
-
+          {user.role==="admin" && (
+            <p style={{ textAlign:"center", fontSize:12, color:"#4B5563", marginTop:10 }}>👑 Admin view — cannot register</p>
+          )}
 
           <div style={{ marginTop:20, display:"flex", flexDirection:"column", gap:6 }}>
             {["🎟️ Instant QR ticket","📧 Email confirmation","💳 Secure payment"].map(f=>(
@@ -1046,33 +983,6 @@ function EventDetail({ event:e, onBack, onRegister, myTickets, user, showToast }
             ))}
           </div>
         </div>
-        ) : (
-        /* ── Admin read-only stats panel ── */
-        <div style={{ width:280, flexShrink:0, background:"rgba(255,255,255,0.03)", border:`1px solid ${e.accent}30`, borderRadius:24, padding:24, position:"sticky", top:96 }}>
-          <div style={{ fontSize:11, color:"#FBBF24", fontWeight:700, letterSpacing:1, marginBottom:16, textTransform:"uppercase" }}>👑 Admin View</div>
-          <div style={{ fontFamily:"'Syne',sans-serif", fontSize:20, fontWeight:800, color:"#fff", marginBottom:4 }}>{e.title}</div>
-          <div style={{ fontSize:13, color:"#4B5563", marginBottom:20 }}>Event Statistics</div>
-          {[
-            ["💰 Price", e.price===0?"FREE":`₹${e.price}`],
-            ["👥 Registered", `${e.registered} / ${e.capacity}`],
-            ["📊 Fill Rate", `${slotsPct(e)}%`],
-            ["🪑 Seats Left", (e.capacity-e.registered)<=0?"Sold Out":String(e.capacity-e.registered)],
-            ["📅 Date", fmtDate(e.startDate)],
-            ["📍 Venue", e.venue],
-          ].map(([k,v])=>(
-            <div key={k} style={{ display:"flex", justifyContent:"space-between", fontSize:13, padding:"9px 0", borderBottom:"1px solid rgba(255,255,255,0.05)" }}>
-              <span style={{ color:"#4B5563" }}>{k}</span>
-              <span style={{ color:"#E5E7EB", fontWeight:600 }}>{v}</span>
-            </div>
-          ))}
-          <div style={{ marginTop:18 }}>
-            <div style={{ fontSize:12, color:"#4B5563", marginBottom:6 }}>Fill rate</div>
-            <div style={{ height:8, background:"rgba(255,255,255,0.07)", borderRadius:4 }}>
-              <div style={{ height:"100%", width:`${slotsPct(e)}%`, background:`linear-gradient(90deg,${e.accent},${e.accent}88)`, borderRadius:4 }} />
-            </div>
-          </div>
-        </div>
-        )}
       </div>
     </div>
   );
@@ -1087,7 +997,7 @@ function MyTickets({ tickets, setPage, onOpen }) {
       <div style={{ fontSize:80, marginBottom:20, animation:`float 3s ease-in-out infinite` }}>🎟️</div>
       <h2 style={{ fontFamily:"'Syne', sans-serif", fontSize:32, fontWeight:800, color:"#fff", marginBottom:12 }}>No Tickets Yet</h2>
       <p style={{ color:"#4B5563", fontSize:16, marginBottom:32 }}>Register for events to get your QR tickets here.</p>
-      <button className="btn-press" onClick={()=>setPage("events")} style={{ background:"linear-gradient(135deg,#FF6B35,#6366F1)", border:"none", color:"#fff", padding:"14px 36px", borderRadius:50, fontSize:15, fontWeight:700 }}>Browse Events →</button>
+      <button className="btn-press" onClick={()=>setPage("events")} style={{ background:"linear-gradient(135deg,#FF6B35,#FF3CAC)", border:"none", color:"#fff", padding:"14px 36px", borderRadius:50, fontSize:15, fontWeight:700 }}>Browse Events →</button>
     </div>
   );
 
@@ -1129,53 +1039,13 @@ function MyTickets({ tickets, setPage, onOpen }) {
 /* ─────────────────────────────────────────────────────────
    ADMIN DASHBOARD
 ───────────────────────────────────────────────────────── */
-function AdminDashboard({ events: staticEvents, tickets }) {
-  /* ── Live Firebase data ── */
-  const [liveStats, setLiveStats]         = useState(null);
-  const [liveEvents, setLiveEvents]       = useState([]);
-  const [liveRegs, setLiveRegs]           = useState([]);
-  const [fbLoading, setFbLoading]         = useState(true);
-  const [fbError, setFbError]             = useState(null);
-  const [tab, setTab]                     = useState("overview");
-
-  useEffect(() => {
-    let cancelled = false;
-    const load = async () => {
-      try {
-        const [statsRes, eventsRes] = await Promise.all([
-          api.admin.stats(),
-          api.events.list(),
-        ]);
-        if (!cancelled) {
-          setLiveStats(statsRes);
-          setLiveEvents(Array.isArray(eventsRes) ? eventsRes : eventsRes.events || []);
-        }
-        try {
-          const regsRes = await api.admin.registrations({ limit: 50 });
-          if (!cancelled) setLiveRegs(Array.isArray(regsRes) ? regsRes : regsRes.registrations || []);
-        } catch (_) {}
-      } catch (err) {
-        if (!cancelled) setFbError(err.message);
-      } finally {
-        if (!cancelled) setFbLoading(false);
-      }
-    };
-    load();
-    return () => { cancelled = true; };
-  }, []);
-
-  // Merge: prefer live data, fall back to static
-  const events = liveEvents.length ? liveEvents : staticEvents;
-  const totalRev = liveStats?.overview?.totalRevenue
-    ?? tickets.reduce((s,t)=>s+t.event.price,0);
-  const totalReg = liveStats?.overview?.totalTickets
-    ?? events.reduce((s,e)=>s+(e.registered||0),0);
-  const totalUsers = liveStats?.overview?.totalUsers ?? "—";
-  const checkedIn  = liveStats?.overview?.totalCheckedIn ?? "—";
-  const ongoing    = events.filter(e=>getStatus(e)==="ongoing").length;
-  const upcoming   = events.filter(e=>getStatus(e)==="upcoming").length;
-  const avgFill    = events.length
-    ? Math.round(events.reduce((s,e)=>s+slotsPct(e),0)/events.length) : 0;
+function AdminDashboard({ events, tickets }) {
+  const totalRev = tickets.reduce((s,t)=>s+t.event.price,0);
+  const totalReg = events.reduce((s,e)=>s+e.registered,0);
+  const ongoing = events.filter(e=>getStatus(e)==="ongoing").length;
+  const upcoming = events.filter(e=>getStatus(e)==="upcoming").length;
+  const avgFill = Math.round(events.reduce((s,e)=>s+slotsPct(e),0)/events.length);
+  const [tab, setTab] = useState("overview");
 
   const cats = {};
   events.forEach(e=>{ cats[e.category]=(cats[e.category]||0)+e.registered; });
@@ -1183,12 +1053,12 @@ function AdminDashboard({ events: staticEvents, tickets }) {
   const maxCat = topCats[0]?.[1]||1;
 
   const statCards = [
-    { label:"Total Events",        value: fbLoading ? "…" : events.length,                      icon:"🎪", color:"#6366F1" },
-    { label:"Live Now",            value: fbLoading ? "…" : ongoing,                            icon:"🔴", color:"#EF4444" },
-    { label:"Total Registrations", value: fbLoading ? "…" : (typeof totalReg==="number"?totalReg.toLocaleString():totalReg), icon:"👥", color:"#FF6B35" },
-    { label:"Total Users",         value: fbLoading ? "…" : totalUsers,                         icon:"🎓", color:"#00D4AA" },
-    { label:"Revenue",             value: fbLoading ? "…" : `₹${typeof totalRev==="number"?totalRev.toLocaleString():0}`, icon:"💰", color:"#FBBF24" },
-    { label:"Checked In",          value: fbLoading ? "…" : checkedIn,                          icon:"✅", color:"#10B981" },
+    { label:"Total Events", value:events.length, icon:"🎪", color:"#6366F1" },
+    { label:"Live Now", value:ongoing, icon:"🔴", color:"#EF4444" },
+    { label:"Upcoming", value:upcoming, icon:"⏰", color:"#10B981" },
+    { label:"Total Registrations", value:totalReg.toLocaleString(), icon:"👥", color:"#FF6B35" },
+    { label:"Revenue (Test)", value:`₹${totalRev.toLocaleString()}`, icon:"💰", color:"#FBBF24" },
+    { label:"Avg Fill Rate", value:`${avgFill}%`, icon:"📊", color:"#FF3CAC" },
   ];
 
   // CSV export
@@ -1217,24 +1087,6 @@ function AdminDashboard({ events: staticEvents, tickets }) {
         </button>
       </div>
 
-      {/* Firebase connection status */}
-      {fbLoading && (
-        <div style={{ background:"rgba(99,102,241,0.1)", border:"1px solid rgba(99,102,241,0.3)", borderRadius:12, padding:"10px 18px", marginBottom:20, fontSize:13, color:"#818CF8", display:"flex", alignItems:"center", gap:8 }}>
-          <span style={{ width:10, height:10, borderRadius:"50%", background:"#6366F1", animation:"pulse 1s infinite", display:"inline-block" }} />
-          Connecting to Firebase…
-        </div>
-      )}
-      {!fbLoading && fbError && (
-        <div style={{ background:"rgba(239,68,68,0.1)", border:"1px solid rgba(239,68,68,0.3)", borderRadius:12, padding:"10px 18px", marginBottom:20, fontSize:13, color:"#EF4444" }}>
-          ⚠ Firebase offline ({fbError}) — showing local data
-        </div>
-      )}
-      {!fbLoading && !fbError && (
-        <div style={{ background:"rgba(16,185,129,0.1)", border:"1px solid rgba(16,185,129,0.25)", borderRadius:12, padding:"10px 18px", marginBottom:20, fontSize:13, color:"#10B981", display:"flex", alignItems:"center", gap:8 }}>
-          <span>🔥</span> Firebase connected — live data
-        </div>
-      )}
-
       {/* Stats */}
       <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(175px,1fr))", gap:16, marginBottom:32 }}>
         {statCards.map((s,i)=>(
@@ -1248,10 +1100,10 @@ function AdminDashboard({ events: staticEvents, tickets }) {
 
       {/* Tabs */}
       <div style={{ display:"flex", gap:4, marginBottom:24, background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.07)", borderRadius:14, padding:4, alignSelf:"start", width:"fit-content" }}>
-        {[["overview","📊 Overview"],["events","🎪 All Events"],["registrations","🎟️ Registrations"]].map(([k,l])=>(
+        {[["overview","📊 Overview"],["events","🎪 All Events"]].map(([k,l])=>(
           <button key={k} onClick={()=>setTab(k)} className="btn-press" style={{
             padding:"9px 20px", borderRadius:11, border:"none", fontSize:14, fontWeight:600,
-            background: tab===k ? "linear-gradient(135deg,#FF6B35,#6366F1)" : "transparent",
+            background: tab===k ? "linear-gradient(135deg,#FF6B35,#FF3CAC)" : "transparent",
             color: tab===k ? "#fff" : "#4B5563", transition:"all 0.2s"
           }}>{l}</button>
         ))}
@@ -1351,63 +1203,6 @@ function AdminDashboard({ events: staticEvents, tickets }) {
               })}
             </tbody>
           </table>
-        </div>
-      )}
-
-      {tab === "registrations" && (
-        <div style={{ animation:"fadeUp 0.4s ease" }}>
-          {fbLoading ? (
-            <div style={{ textAlign:"center", padding:"60px 0", color:"#4B5563" }}>
-              <div style={{ fontSize:40, marginBottom:12, animation:"spin 1s linear infinite", display:"inline-block" }}>⟳</div>
-              <p>Loading registrations from Firebase…</p>
-            </div>
-          ) : fbError ? (
-            <div style={{ textAlign:"center", padding:"60px 0" }}>
-              <div style={{ fontSize:48, marginBottom:16 }}>🔌</div>
-              <p style={{ color:"#EF4444", marginBottom:8 }}>Firebase not connected</p>
-              <p style={{ color:"#4B5563", fontSize:13 }}>Start the backend server and configure .env to see live registrations</p>
-            </div>
-          ) : liveRegs.length === 0 ? (
-            <div style={{ textAlign:"center", padding:"60px 0" }}>
-              <div style={{ fontSize:48, marginBottom:16 }}>📭</div>
-              <p style={{ color:"#6B7280" }}>No registrations yet in Firebase</p>
-            </div>
-          ) : (
-            <div style={{ background:"rgba(255,255,255,0.02)", border:"1px solid rgba(255,255,255,0.07)", borderRadius:20, overflow:"auto" }}>
-              <table style={{ width:"100%", borderCollapse:"collapse", minWidth:700 }}>
-                <thead>
-                  <tr style={{ background:"rgba(255,255,255,0.04)" }}>
-                    {["Ticket ID","Student","Email","Event","Date","Payment","Status"].map(h=>(
-                      <th key={h} style={{ padding:"14px 16px", textAlign:"left", fontSize:11, fontWeight:700, color:"#4B5563", textTransform:"uppercase", letterSpacing:1, borderBottom:"1px solid rgba(255,255,255,0.05)", whiteSpace:"nowrap" }}>{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {liveRegs.map((reg,i)=>(
-                    <tr key={reg.ticketId||i} style={{ borderBottom:"1px solid rgba(255,255,255,0.04)" }}
-                      onMouseEnter={ev=>ev.currentTarget.style.background="rgba(255,255,255,0.025)"}
-                      onMouseLeave={ev=>ev.currentTarget.style.background="transparent"}>
-                      <td style={{ padding:"13px 16px", fontFamily:"'JetBrains Mono',monospace", fontSize:11, color:"#818CF8" }}>{reg.ticketId||"—"}</td>
-                      <td style={{ padding:"13px 16px", fontSize:14, fontWeight:600, color:"#fff" }}>{reg.userName||"—"}</td>
-                      <td style={{ padding:"13px 16px", fontSize:12, color:"#6B7280" }}>{reg.userEmail||"—"}</td>
-                      <td style={{ padding:"13px 16px", fontSize:13, color:"#9CA3AF" }}>{reg.eventTitle||"—"}</td>
-                      <td style={{ padding:"13px 16px", fontSize:12, color:"#6B7280", whiteSpace:"nowrap" }}>{reg.eventDate ? fmtDate(reg.eventDate) : "—"}</td>
-                      <td style={{ padding:"13px 16px", fontSize:13, fontWeight:700, color:"#FBBF24" }}>
-                        {reg.eventPrice===0?"FREE":`₹${reg.eventPrice||0}`}
-                      </td>
-                      <td style={{ padding:"13px 16px" }}>
-                        <span style={{
-                          background: reg.checkedIn ? "rgba(16,185,129,0.15)" : "rgba(99,102,241,0.15)",
-                          color: reg.checkedIn ? "#10B981" : "#818CF8",
-                          fontSize:11, fontWeight:700, padding:"3px 10px", borderRadius:20
-                        }}>{reg.checkedIn ? "✓ Checked In" : "Issued"}</span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
         </div>
       )}
     </div>
