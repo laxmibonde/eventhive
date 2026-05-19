@@ -445,19 +445,24 @@ function AuthPage({ mode, setMode, onLogin, onBack }) {
   const ADMIN = { email:"admin@eventhive.com", password:"admin123" };
   const accent = mode === "signup" ? "#FF3CAC" : "#FF6B35";
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!email || !password) { setErr("Please fill all fields."); return; }
     if (mode === "signup" && !name) { setErr("Enter your name."); return; }
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      if (role === "admin") {
-        if (email === ADMIN.email && password === ADMIN.password) onLogin("admin","Admin","admin@eventhive.com", false);
-        else { setErr("Invalid admin credentials."); }
+    try {
+      let res;
+      if (mode === "signup") {
+        res = await api.auth.signup(name, email, password);
       } else {
-        onLogin("user", mode==="signup" ? name : email.split("@")[0], email, mode==="signup");
+        res = await api.auth.login(email, password);
       }
-    }, 900);
+      api.setToken(res.token);
+      onLogin(res.user.role, res.user.name, res.user.email, mode === "signup");
+    } catch (err) {
+      setErr(err.message || "Login failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const inputSt = {
