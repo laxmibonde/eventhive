@@ -9,7 +9,7 @@ export default defineConfig({
     proxy: {
       // Proxy all /api calls to the Express backend during development
       '/api': {
-        target: 'http://localhost:5000',
+        target: 'https://eventhive-gdf5.onrender.com',
         changeOrigin: true,
         secure: false,
       }
