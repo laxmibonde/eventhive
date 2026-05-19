@@ -902,7 +902,7 @@ const handleRegister = async () => {
     }
 
     const options = {
-      key: order.keyId,                  // your RAZORPAY_KEY_ID from backend
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID || order.keyId,                // your RAZORPAY_KEY_ID from backend
       amount: order.amount,
       currency: order.currency,
       name: "EventHive",
