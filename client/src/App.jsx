@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import api from './api';
 
 /* ─── FONTS ─── */
 const FontLink = () => (
@@ -176,16 +177,14 @@ export default function App() {
     setPage("landing");
     showToast("See you next time! 👋", "info");
   };
-  const handleRegister = (event) => {
-    const ticket = {
-      id: `EVH-${Date.now().toString(36).toUpperCase()}`,
-      event, registeredAt: new Date().toLocaleString(),
-      qrValue: `EVENTHIVE:${event.id}:USR:${Math.random().toString(36).substr(2,8).toUpperCase()}`
-    };
-    setMyTickets(p => [...p, ticket]);
-    setTicketModal(ticket);
-    showToast(`Registered for ${event.title}! 🎟️`);
-  };
+ const handleRegister = (event, ticket) => {
+  const tkt = ticket
+    ? { id: ticket.ticketId, event, qrValue: ticket.qrCode, registeredAt: new Date().toLocaleString() }
+    : { id: `EVH-${Date.now().toString(36).toUpperCase()}`, event, registeredAt: new Date().toLocaleString(), qrValue: `EVENTHIVE:${event.id}` };
+  setMyTickets(p => [...p, tkt]);
+  setTicketModal(tkt);
+  showToast(`Registered for ${event.title}! 🎟️`);
+};
 
   return (
     <div style={{ fontFamily:"'Plus Jakarta Sans', sans-serif", background:"#050508", minHeight:"100vh", color:"#fff" }}>
@@ -869,11 +868,75 @@ function EventDetail({ event:e, onBack, onRegister, myTickets, user }) {
   const cd = getCountdown(e.startDate);
   const [paying, setPaying] = useState(false);
 
-  const handleRegister = () => {
-    if (alreadyRegistered || slots <= 0) return;
-    setPaying(true);
-    setTimeout(() => { setPaying(false); onRegister(e); }, 1400);
-  };
+  const loadRazorpayScript = () =>
+  new Promise((resolve) => {
+    if (window.Razorpay) return resolve(true);
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+
+const handleRegister = async () => {
+  if (alreadyRegistered || slots <= 0) return;
+  setPaying(true);
+
+  try {
+    // Free event path
+    if (e.price === 0) {
+      const res = await api.payment.freeRegister(e.id);
+      setPaying(false);
+      onRegister(e, res.ticket);
+      return;
+    }
+
+    // Paid event — create Razorpay order
+    const order = await api.payment.createOrder(e.id);
+
+    const loaded = await loadRazorpayScript();
+    if (!loaded) {
+      alert("Failed to load Razorpay. Check your internet connection.");
+      setPaying(false);
+      return;
+    }
+
+    const options = {
+      key: order.keyId,                  // your RAZORPAY_KEY_ID from backend
+      amount: order.amount,
+      currency: order.currency,
+      name: "EventHive",
+      description: order.eventTitle,
+      order_id: order.orderId,
+      handler: async (response) => {
+        // Verify payment on backend
+        const verified = await api.payment.verify({
+          razorpay_order_id: response.razorpay_order_id,
+          razorpay_payment_id: response.razorpay_payment_id,
+          razorpay_signature: response.razorpay_signature,
+          eventId: e.id,
+        });
+        setPaying(false);
+        onRegister(e, verified.ticket);
+      },
+      prefill: {
+        name: user?.name || "",
+        email: user?.email || "",
+      },
+      theme: { color: e.accent || "#FF6B35" },
+      modal: {
+        ondismiss: () => setPaying(false),
+      },
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+
+  } catch (err) {
+    setPaying(false);
+    alert(err.message || "Payment failed. Please try again.");
+  }
+};
 
   return (
     <div style={{ maxWidth:1000, margin:"0 auto", padding:"32px 24px", animation:"fadeUp 0.4s ease" }}>
